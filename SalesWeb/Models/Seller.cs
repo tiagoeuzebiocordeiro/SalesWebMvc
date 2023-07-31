@@ -12,6 +12,7 @@ namespace SalesWeb.Models {
         public DateTime BirthDate { get; set; }
         public double BaseSalary { get; set; }
         public Department Department { get; set; }
+        public int DepartmentId { get; set;} // avisando pro entity framework que esse Id vai ter que existir, pois o tipo int não pode ser nulo!
         public ICollection<SalesRecord> Sales { get; set; } = new List<SalesRecord>();
 
         public Seller() { }
