@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SalesWeb.Data;
+using SalesWeb.Services;
 
 namespace SalesWeb {
     public class Startup {
@@ -28,7 +29,7 @@ namespace SalesWeb {
         builder.MigrationsAssembly("SalesWeb")));
 
             services.AddScoped<SeedingService>(); //Isso aqui registra o nosso serviço no sistema de injeção de dependência da aplicação.
-
+            services.AddScoped<SellerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
