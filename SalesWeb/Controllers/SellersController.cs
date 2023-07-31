@@ -4,6 +4,7 @@ using SalesWeb.Models;
 using SalesWeb.Models.ViewModels;
 using System.Collections.Generic;
 using SalesWeb.Services.Exceptions;
+using System.Diagnostics;
 
 namespace SalesWeb.Controllers {
     public class SellersController : Controller {
@@ -38,12 +39,12 @@ namespace SalesWeb.Controllers {
 
         public IActionResult Delete(int? id) { // Isso é como se fosse um "get" delete.
             if (id == null) {
-                return NotFound(); // é nulo, cannot delete
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" }); // é nulo, cannot delete
             }
 
             var obj = _sellerService.FindById(id.Value);
             if (obj == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
             return View(obj);
@@ -59,12 +60,12 @@ namespace SalesWeb.Controllers {
 
         public IActionResult Details(int? id) {
             if (id == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
 
             var obj = _sellerService.FindById(id.Value);
             if (obj == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
             return View(obj);
@@ -73,12 +74,12 @@ namespace SalesWeb.Controllers {
         public IActionResult Edit(int? id) {
 
             if (id == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
 
             var obj = _sellerService.FindById(id.Value);
             if (obj == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
             List<Department> departments = _departmentService.FindAll(); // povoar o select box
@@ -91,7 +92,7 @@ namespace SalesWeb.Controllers {
         public IActionResult Edit(int id, Seller seller) {
 
             if (id != seller.Id) {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
             }
 
 
@@ -99,15 +100,29 @@ namespace SalesWeb.Controllers {
                 _sellerService.Update(seller);
                 return RedirectToAction(nameof(Index));
             }
-            catch (NotFoundException) {
-                return NotFound();
+            catch (NotFoundException e) {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
 
             }
-            catch (DbConcurrencyException) {
-                return BadRequest();
+            catch (DbConcurrencyException e) {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
             }
+
+            /*catch (ApplicationException e) {
+             // super classe.
+                return return RedirectToAction(nameof(Error), new { message = e.Message });
+            
+            }
+            
+            */
 
         }
+
+        public IActionResult Error(string message) {
+            var viewModel = new ErrorViewModel { Message = message, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier }; // MACETE P PEGAR ID INTERNO DA REQ
+            return View(viewModel);
+        }
+
     }
 
 }
