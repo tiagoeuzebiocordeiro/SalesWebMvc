@@ -16,5 +16,10 @@ namespace SalesWeb.Services {
             return _context.Seller.ToList(); // Por enquanto, SYNC.
         }
 
+        public void Insert(Seller obj) {
+            _context.Add(obj);
+            _context.SaveChanges();
+        }
+
     }
 }
