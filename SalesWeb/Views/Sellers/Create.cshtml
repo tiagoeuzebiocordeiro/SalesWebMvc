@@ -9,6 +9,7 @@
 <div class="row"> <!--Garante que a div ocupe a tela toda-->
     <div class="col-md-4">
         <form asp-action="Create"> <!-- Quando eu enviar o formulario eu vou chamar a ação CREATE porem com o metodo POST -->
+           <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Seller.Name" class="control-label"></label>
                     <input asp-for="Seller.Name" class="form-control" />
@@ -44,3 +45,9 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
