@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SalesWeb.Data;
 using SalesWeb.Services;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 namespace SalesWeb {
     public class Startup {
@@ -35,6 +37,23 @@ namespace SalesWeb {
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SeedingService seedingService) {
+
+            ///////////////////////////////////////////////////////////////////////////////////////
+
+            // LOCALE DO ESTADOS UNIDOS
+
+            var enUS = new CultureInfo("en-US");
+            var localizationOptions = new RequestLocalizationOptions { 
+                DefaultRequestCulture = new RequestCulture(enUS),
+                SupportedCultures = new List<CultureInfo> { enUS},
+                SupportedUICultures = new List<CultureInfo> { enUS}
+
+            };
+
+            app.UseRequestLocalization(localizationOptions);
+            // END
+            ///////////////////////////////////////////////////////////////////////////////////////
+
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
                 seedingService.Seed();
